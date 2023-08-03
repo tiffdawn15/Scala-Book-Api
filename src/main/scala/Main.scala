@@ -1,11 +1,13 @@
+package book
 
-import smithy4s.hello._
+import book.smithy._
+
 import cats.effect._
 import cats.implicits._
+
 import org.http4s.implicits._
 import org.http4s.ember.server._
 import org.http4s._
-import com.comcast.ip4s._
 import smithy4s.http4s.SimpleRestJsonBuilder
 
 object HelloWorldImpl extends HelloWorldService[IO] {
@@ -17,12 +19,20 @@ object HelloWorldImpl extends HelloWorldService[IO] {
   }
 }
 
+object BookImpl extends BookApi[IO] {
+  // def getBooks(): IO[String] = IO.pure {
+    
+
+  // }
+}
+
 object Routes {
   private val example: Resource[IO, HttpRoutes[IO]] =
-    SimpleRestJsonBuilder.routes(HelloWorldImpl).resource
+    SimpleRestJsonBuilder.routes(BookImpl).resource
 
   private val docs: HttpRoutes[IO] =
-    smithy4s.http4s.swagger.docs[IO](HelloWorldService)
+    smithy4s.http4s.swagger.docs[IO](HelloWorldService);
+    smithy4s.http4s.swagger.docs[IO](BookApi) 
 
   val all: Resource[IO, HttpRoutes[IO]] = example.map(_ <+> docs)
 }
