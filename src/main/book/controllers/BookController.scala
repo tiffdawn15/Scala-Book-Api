@@ -1,4 +1,4 @@
-package  book.controllers;
+package  book;
 
 import cats.effect
 

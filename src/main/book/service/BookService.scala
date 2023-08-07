@@ -1,4 +1,4 @@
-package scala.services
+package book
 
 import cats.effect.IO
 

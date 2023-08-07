@@ -1,5 +1,5 @@
 $version: "2"
-namespace book.smithy
+namespace book
 
 use alloy#simpleRestJson
 

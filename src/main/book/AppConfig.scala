@@ -3,7 +3,7 @@ package book
 import scala.io.Source
 
 object AppConfig {
-    val evn: Map[String, String] = {
+    val env: Map[String, String] = {
         val localEnv = 
             try {
                 val inputStream = getClass().getClassLoader().getResourceAsStream(".env")
