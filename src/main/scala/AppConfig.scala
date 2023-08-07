@@ -14,7 +14,9 @@ object AppConfig {
                 .collect { case Array(key, value) if !key.startsWith("#") => (key, value) }
             .toMap
         } catch {
-            case ex => Map()
+            // TODO: Double check what type of errors could be thrown here
+            case ex:IllegalStateException => Map()
+            
         }
         sys.env ++ localEnv
     

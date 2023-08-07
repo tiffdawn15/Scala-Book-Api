@@ -8,6 +8,8 @@ import cats.implicits._
 import org.http4s.implicits._
 import org.http4s.ember.server._
 import org.http4s._
+
+
 import smithy4s.http4s.SimpleRestJsonBuilder
 
 object HelloWorldImpl extends HelloWorldService[IO] {
@@ -19,35 +21,32 @@ object HelloWorldImpl extends HelloWorldService[IO] {
   }
 }
 
-object BookImpl extends BookApi[IO] {
-  // def getBooks(): IO[String] = IO.pure {
-    
 
-  // }
-}
+// object BookImpl extends BookApi[IO] {
+//   // def getBooks(): IO[String] = IO.pure {
+  
+//   // }
+// }
 
 object Routes {
-  private val example: Resource[IO, HttpRoutes[IO]] =
-    SimpleRestJsonBuilder.routes(BookImpl).resource
+  // This can be easily mounted onto a server.
+  val myRoutes: Resource[IO, HttpRoutes[IO]] =
+    SimpleRestJsonBuilder.routes(HelloWorldImpl).resource
 
   private val docs: HttpRoutes[IO] =
-    smithy4s.http4s.swagger.docs[IO](HelloWorldService);
-    smithy4s.http4s.swagger.docs[IO](BookApi) 
+    smithy4s.http4s.swagger.docs[IO](HelloWorldService)
 
-  val all: Resource[IO, HttpRoutes[IO]] = example.map(_ <+> docs)
+     val all: Resource[IO, HttpRoutes[IO]] = myRoutes.map(_ <+> docs)
 }
+
 
 object Main extends IOApp.Simple {
 
-  val run = Routes.all
-    .flatMap { routes =>
+
+  def run: IO[Unit] =
       EmberServerBuilder
         .default[IO]
-        .withPort(port"9000")
-        .withHost(host"localhost")
-        .withHttpApp(routes.orNotFound)
         .build
-    }
-    .use(_ => IO.never)
-
+        .evalMap(srv => IO.println(srv.addressIp4s))
+        .useForever
 }
